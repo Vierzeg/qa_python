@@ -239,4 +239,25 @@ class TestBooksCollector:
         # Проверяем, что количество книг соответствует ожидаемому
         assert len(collector.get_books_genre()) == expected_count
 
+    # 10. Позитивный тест для метода получения списка Избранных книг
+    @pytest.mark.parametrize(
+        "book_names_to_add, expected_favorites_books",
+        [
+            (['Гордость и предубеждение и зомби', 'Что делать, если ваш кот хочет вас убить'],
+             ['Гордость и предубеждение и зомби', 'Что делать, если ваш кот хочет вас убить']),
+            # добавляем две книги в избранное
+            (['Рик и Морти'], ['Рик и Морти']),  # добавляем одну книгу в избранное
+            ([], []),  # нет книг в избранном
+        ]
+    )
+    def test_get_list_of_favorites_books(self, book_names_to_add, expected_favorites_books):
+        collector = BooksCollector()
 
+        # Добавляем книги в коллекцию
+        for book_name in book_names_to_add:
+            collector.add_new_book(book_name)
+            collector.add_book_in_favorites(book_name)
+
+        # Проверяем, что метод возвращает правильный список избранных книг
+        favorites_books = collector.get_list_of_favorites_books()
+        assert favorites_books == expected_favorites_books
